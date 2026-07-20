@@ -1,0 +1,12 @@
+.git
+.github
+.idea
+out
+*.deb
+*.dsc
+*.orig.tar.gz
+*.debian.tar.xz
+*.buildinfo
+*.changes
+nvim-linux-x86_64
+nvim-linux-x86_64.tar.gz

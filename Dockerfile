@@ -1,0 +1,25 @@
+ARG DIST=bookworm
+FROM debian:${DIST}
+
+ENV DEBIAN_FRONTEND=noninteractive
+
+# Build environment for the target distribution. dh_shlibdeps resolves the
+# prebuilt binary's dependencies (libc6, libgcc-s1) against THIS dist's
+# libraries, so the produced .deb declares versions valid for that suite.
+RUN apt-get update && apt-get install -y --no-install-recommends \
+        build-essential \
+        debhelper \
+        dpkg-dev \
+        wget \
+        ca-certificates \
+        xz-utils \
+        file \
+    && rm -rf /var/lib/apt/lists/*
+
+WORKDIR /build
+COPY . /build/
+
+# debian/rules downloads the upstream prebuilt tarball during the build.
+RUN chmod +x debian/rules && dpkg-buildpackage -b -us -uc
+
+RUN mkdir -p /out && cp ../neovim-latest*.deb /out/

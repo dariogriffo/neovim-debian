@@ -1,0 +1,13 @@
+#!/bin/sh
+set -e
+
+case "$1" in
+    configure)
+        update-alternatives --install /usr/bin/nvim nvim \
+            /usr/bin/nvim.unstripped 50
+        ;;
+esac
+
+#DEBHELPER#
+
+exit 0

@@ -1,0 +1,55 @@
+Format: https://www.debian.org/doc/packaging-manuals/copyright-format/1.0/
+Upstream-Name: neovim
+Upstream-Contact: https://github.com/neovim/neovim/issues
+Source: https://github.com/neovim/neovim
+
+Comment:
+ This is an unofficial repackaging of the official upstream Neovim prebuilt
+ release binary (nvim-linux-x86_64.tar.gz). No source is modified or rebuilt;
+ the upstream artefact is split into Debian packages only.
+
+Files: *
+Copyright: Neovim contributors
+License: Apache-2.0 and Vim
+ Neovim is licensed under the terms of the Apache 2.0 license, except for
+ parts of Neovim that were contributed under the Vim license. The bundled
+ runtime files (share/nvim/runtime) originate from Vim and are covered by the
+ Vim license. The prebuilt binary statically links several libraries, each
+ under its own permissive licence (LuaJIT/MIT, tree-sitter/MIT, libuv/MIT,
+ libvterm/MIT, unibilium/LGPL-3.0, utf8proc/MIT, msgpack-c/BSL-1.0, ...).
+ See the upstream LICENSE.txt for the full text:
+ https://github.com/neovim/neovim/blob/master/LICENSE.txt
+
+Files: debian/*
+Copyright: 2026 Dario Griffo <dariogriffo@gmail.com>
+License: MIT
+
+License: Apache-2.0
+ On Debian systems, the complete text of the Apache License version 2.0 can be
+ found in "/usr/share/common-licenses/Apache-2.0".
+
+License: Vim
+ Vim is Charityware. You can use and copy it as much as you like, but you are
+ encouraged to make a donation for needy children in Uganda. Please see the
+ kcc section of the vim online help, or visit the Vim website. The full Vim
+ license text is available in the runtime documentation
+ (share/nvim/runtime/doc/uganda.txt) and at https://vimhelp.org/uganda.txt.html
+
+License: MIT
+ Permission is hereby granted, free of charge, to any person obtaining a copy
+ of this software and associated documentation files (the "Software"), to deal
+ in the Software without restriction, including without limitation the rights
+ to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+ copies of the Software, and to permit persons to whom the Software is
+ furnished to do so, subject to the following conditions:
+ .
+ The above copyright notice and this permission notice shall be included in all
+ copies or substantial portions of the Software.
+ .
+ THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+ IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+ FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+ AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+ LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+ SOFTWARE.

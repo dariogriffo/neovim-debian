@@ -1,0 +1,52 @@
+Source: neovim-latest
+Section: editors
+Priority: optional
+Maintainer: Dario Griffo <dariogriffo@gmail.com>
+Build-Depends: debhelper-compat (= 13), wget, ca-certificates, xz-utils
+Standards-Version: 4.6.2
+Homepage: https://neovim.io
+Rules-Requires-Root: no
+
+Package: neovim-latest
+Architecture: amd64
+Depends: neovim-latest-runtime (= ${source:Version}), ${shlibs:Depends}, ${misc:Depends}
+Recommends: python3-pynvim, xxd, xclip | xsel | wl-clipboard
+Suggests: ctags
+Provides: neovim (= ${source:Upstream-Version}), editor
+Conflicts: neovim
+Replaces: neovim
+Description: heavily refactored vim fork (latest upstream build)
+ Neovim is a fork of Vim focused on modern code and features, rather than
+ running in legacy environments.
+ .
+ This package ships the official upstream prebuilt nvim binary (stripped),
+ repackaged for Debian so that stable users (bookworm, trixie, ...) can track
+ the latest Neovim release as soon as it is published. It provides
+ /usr/bin/nvim (and the "editor" alternative) via update-alternatives.
+
+Package: neovim-latest-runtime
+Architecture: all
+Multi-Arch: foreign
+Depends: ${misc:Depends}
+Provides: neovim-runtime (= ${source:Upstream-Version})
+Conflicts: neovim-runtime
+Replaces: neovim-runtime
+Description: heavily refactored vim fork (runtime files)
+ Neovim is a fork of Vim focused on modern code and features, rather than
+ running in legacy environments.
+ .
+ This package contains the architecture-independent runtime files (syntax and
+ indentation rules, colour schemes, standard plugins, documentation, the man
+ page and the desktop entry) shared by the neovim-latest binary packages.
+
+Package: neovim-latest-unstripped
+Architecture: amd64
+Depends: neovim-latest (= ${source:Version}), ${shlibs:Depends}, ${misc:Depends}
+Description: heavily refactored vim fork (unstripped binary)
+ Neovim is a fork of Vim focused on modern code and features, rather than
+ running in legacy environments.
+ .
+ This package provides the same upstream nvim binary as neovim-latest but with
+ the upstream debug symbols retained, which is useful for backtraces and
+ debugging. Install it alongside neovim-latest and switch the active binary
+ with: update-alternatives --config nvim

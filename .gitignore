@@ -1,0 +1,17 @@
+# Build artifacts
+*.deb
+*.dsc
+*.orig.tar.gz
+*.debian.tar.xz
+*.buildinfo
+*.changes
+out/
+
+# Upstream download / unpack
+nvim-linux-x86_64/
+nvim-linux-x86_64.tar.gz
+neovim-latest-*/
+
+# Editors / OS
+.idea/*
+.DS_Store
