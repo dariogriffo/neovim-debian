@@ -1,0 +1,13 @@
+#!/bin/sh
+set -e
+
+case "$1" in
+    remove|deconfigure)
+        update-alternatives --remove nvim /usr/bin/nvim.stripped
+        update-alternatives --remove editor /usr/bin/nvim.stripped
+        ;;
+esac
+
+#DEBHELPER#
+
+exit 0

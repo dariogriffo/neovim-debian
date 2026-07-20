@@ -1,0 +1,6 @@
+neovim-latest (0.12.4-1) unstable; urgency=medium
+
+  * Placeholder changelog - overwritten per distribution by the build scripts
+    (build_neovim_debian.sh / build_src.sh).
+
+ -- Dario Griffo <dariogriffo@gmail.com>  Mon, 20 Jul 2026 00:00:00 +0000

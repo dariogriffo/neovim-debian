@@ -1,0 +1,58 @@
+#!/usr/bin/make -f
+# Repackage the official upstream Neovim prebuilt tarball into Debian packages.
+# We do NOT build from source: the amd64 binary + parsers come straight from the
+# upstream GitHub release, and are split into an arch:amd64 package (binary +
+# tree-sitter parsers) plus an arch:all runtime package.
+
+# Upstream version, taken from the changelog with the Debian revision/suffix
+# stripped (e.g. 0.12.4-1~bookworm -> 0.12.4).
+PKG_VERSION := $(shell dpkg-parsechangelog -S Version | sed 's/[-~].*//')
+
+TARBALL := nvim-linux-x86_64.tar.gz
+SRCDIR  := nvim-linux-x86_64
+URL     := https://github.com/neovim/neovim/releases/download/v$(PKG_VERSION)/$(TARBALL)
+
+%:
+	dh $@
+
+override_dh_auto_configure:
+
+override_dh_auto_build:
+	wget -q "$(URL)" -O "$(TARBALL)"
+	rm -rf "$(SRCDIR)"
+	tar xzf "$(TARBALL)"
+
+override_dh_auto_test:
+
+override_dh_auto_install:
+	# --- neovim-latest (amd64): stripped binary + tree-sitter parsers --------
+	install -D -m 0755 $(SRCDIR)/bin/nvim \
+		debian/neovim-latest/usr/bin/nvim.stripped
+	mkdir -p debian/neovim-latest/usr/lib/nvim/parser
+	cp -a $(SRCDIR)/lib/nvim/parser/*.so \
+		debian/neovim-latest/usr/lib/nvim/parser/
+	# --- neovim-latest-unstripped (amd64): same binary, debug symbols kept ---
+	install -D -m 0755 $(SRCDIR)/bin/nvim \
+		debian/neovim-latest-unstripped/usr/bin/nvim.unstripped
+	# --- neovim-latest-runtime (all): runtime + man + desktop + icons --------
+	mkdir -p debian/neovim-latest-runtime/usr/share/nvim
+	cp -a $(SRCDIR)/share/nvim/runtime \
+		debian/neovim-latest-runtime/usr/share/nvim/runtime
+	install -D -m 0644 $(SRCDIR)/share/man/man1/nvim.1 \
+		debian/neovim-latest-runtime/usr/share/man/man1/nvim.1
+	install -D -m 0644 $(SRCDIR)/share/applications/nvim.desktop \
+		debian/neovim-latest-runtime/usr/share/applications/nvim.desktop
+	mkdir -p debian/neovim-latest-runtime/usr/share/icons
+	cp -a $(SRCDIR)/share/icons/. \
+		debian/neovim-latest-runtime/usr/share/icons/
+
+# Strip the neovim-latest binary + parsers, but keep debug info in the
+# -unstripped package. Never emit automatic -dbgsym packages for a prebuilt.
+override_dh_strip:
+	dh_strip --no-automatic-dbgsym -Xnvim.unstripped
+
+# dwz can choke on / re-mangle upstream's prebuilt DWARF; skip it entirely.
+override_dh_dwz:
+
+override_dh_auto_clean:
+	rm -rf "$(SRCDIR)" "$(TARBALL)"
