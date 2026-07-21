@@ -37,6 +37,27 @@ jobs:
           name: artifact
           path: out/*.deb
 
+  build-ubuntu:
+    name: Build Ubuntu binary packages
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Validate upstream license permits redistribution
+        env:
+          GITHUB_TOKEN: ${{ github.token }}
+        run: ./validate_license.sh ${{ inputs.neovim_version }}
+
+      - name: Build .deb packages
+        run: ./build_neovim_ubuntu.sh ${{ inputs.neovim_version }} ${{ inputs.build_version }}
+
+      - name: Upload Artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: artifact-ubuntu
+          path: out/*_ubu.deb
+
   build-src:
     name: Build source packages
     runs-on: ubuntu-latest
@@ -65,12 +86,17 @@ jobs:
     name: Release neovim-latest for Debian
     if: github.event_name == 'workflow_dispatch' && github.ref == 'refs/heads/main'
     runs-on: ubuntu-latest
-    needs: [build, build-src]
+    needs: [build, build-ubuntu, build-src]
     steps:
       - name: Download Binary Artifacts
         uses: actions/download-artifact@v4
         with:
           name: artifact
+
+      - name: Download Ubuntu Binary Artifacts
+        uses: actions/download-artifact@v4
+        with:
+          name: artifact-ubuntu
 
       - name: Download Source Artifacts
         uses: actions/download-artifact@v4
