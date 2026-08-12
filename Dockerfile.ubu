@@ -23,4 +23,4 @@ COPY . /build/
 # debian/rules downloads the upstream prebuilt tarball during the build.
 RUN chmod +x debian/rules && dpkg-buildpackage -b -us -uc
 
-RUN mkdir -p /out && cp ../neovim-latest*.deb /out/
+RUN mkdir -p /out && cp ../neovim*.deb /out/
