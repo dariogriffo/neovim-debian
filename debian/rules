@@ -25,28 +25,28 @@ override_dh_auto_build:
 override_dh_auto_test:
 
 override_dh_auto_install:
-	# --- neovim-latest (amd64): stripped binary + tree-sitter parsers --------
+	# --- neovim (amd64): stripped binary + tree-sitter parsers ---------------
 	install -D -m 0755 $(SRCDIR)/bin/nvim \
-		debian/neovim-latest/usr/bin/nvim.stripped
-	mkdir -p debian/neovim-latest/usr/lib/nvim/parser
+		debian/neovim/usr/bin/nvim.stripped
+	mkdir -p debian/neovim/usr/lib/nvim/parser
 	cp -a $(SRCDIR)/lib/nvim/parser/*.so \
-		debian/neovim-latest/usr/lib/nvim/parser/
-	# --- neovim-latest-unstripped (amd64): same binary, debug symbols kept ---
+		debian/neovim/usr/lib/nvim/parser/
+	# --- neovim-unstripped (amd64): same binary, debug symbols kept ----------
 	install -D -m 0755 $(SRCDIR)/bin/nvim \
-		debian/neovim-latest-unstripped/usr/bin/nvim.unstripped
-	# --- neovim-latest-runtime (all): runtime + man + desktop + icons --------
-	mkdir -p debian/neovim-latest-runtime/usr/share/nvim
+		debian/neovim-unstripped/usr/bin/nvim.unstripped
+	# --- neovim-runtime (all): runtime + man + desktop + icons ---------------
+	mkdir -p debian/neovim-runtime/usr/share/nvim
 	cp -a $(SRCDIR)/share/nvim/runtime \
-		debian/neovim-latest-runtime/usr/share/nvim/runtime
+		debian/neovim-runtime/usr/share/nvim/runtime
 	install -D -m 0644 $(SRCDIR)/share/man/man1/nvim.1 \
-		debian/neovim-latest-runtime/usr/share/man/man1/nvim.1
+		debian/neovim-runtime/usr/share/man/man1/nvim.1
 	install -D -m 0644 $(SRCDIR)/share/applications/nvim.desktop \
-		debian/neovim-latest-runtime/usr/share/applications/nvim.desktop
-	mkdir -p debian/neovim-latest-runtime/usr/share/icons
+		debian/neovim-runtime/usr/share/applications/nvim.desktop
+	mkdir -p debian/neovim-runtime/usr/share/icons
 	cp -a $(SRCDIR)/share/icons/. \
-		debian/neovim-latest-runtime/usr/share/icons/
+		debian/neovim-runtime/usr/share/icons/
 
-# Strip the neovim-latest binary + parsers, but keep debug info in the
+# Strip the neovim binary + parsers, but keep debug info in the
 # -unstripped package. Never emit automatic -dbgsym packages for a prebuilt.
 override_dh_strip:
 	dh_strip --no-automatic-dbgsym -Xnvim.unstripped

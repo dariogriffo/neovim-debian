@@ -1,7 +1,7 @@
 ![GitHub Release](https://img.shields.io/github/v/release/dariogriffo/neovim-debian)
 ![GitHub Release Date](https://img.shields.io/github/release-date/dariogriffo/neovim-debian)
 
-# Neovim (latest) for Debian
+# Neovim for Debian
 
 This repository contains build scripts that produce **unofficial** Debian
 packages (`.deb`) of the latest [Neovim](https://github.com/neovim/neovim)
@@ -23,12 +23,29 @@ Currently supported Debian suites (amd64):
 
 | Package | Arch | Contents |
 | --- | --- | --- |
-| `neovim-latest` | amd64 | The stripped `nvim` binary and the tree-sitter parsers. Provides `/usr/bin/nvim` and the `editor` alternative. |
-| `neovim-latest-runtime` | all | The architecture-independent runtime (syntax, indent, colourschemes, standard plugins, docs, man page, desktop entry). |
-| `neovim-latest-unstripped` | amd64 | Optional: the same `nvim` binary with upstream debug symbols kept, for backtraces/debugging. |
+| `neovim` | amd64 | The stripped `nvim` binary and the tree-sitter parsers. Provides `/usr/bin/nvim` and the `editor` alternative. |
+| `neovim-runtime` | all | The architecture-independent runtime (syntax, indent, colourschemes, standard plugins, docs, man page, desktop entry). |
+| `neovim-unstripped` | amd64 | Optional: the same `nvim` binary with upstream debug symbols kept, for backtraces/debugging. |
 
-`neovim-latest` `Provides`/`Conflicts`/`Replaces` Debian's own `neovim`, so
-installing it cleanly takes over `/usr/bin/nvim`. The command is still `nvim`.
+These use the same names as Debian's own Neovim packages, so apt simply picks
+whichever version is newer — normally the one from this repository, since it
+tracks upstream releases directly. To make that explicit, pin the repo:
+
+```sh
+sudo tee /etc/apt/preferences.d/deb.griffo.io-neovim > /dev/null << 'EOF'
+Package: neovim neovim-runtime neovim-unstripped
+Pin: origin deb.griffo.io
+Pin-Priority: 1001
+EOF
+```
+
+### Coming from `neovim-latest`
+
+These packages were previously published as `neovim-latest`,
+`neovim-latest-runtime` and `neovim-latest-unstripped`. The new packages
+`Provides`/`Conflicts`/`Replaces` the old names, so `apt update && apt install
+neovim` transitions cleanly and removes the old ones. Nothing else changes —
+the command is still `nvim` and your configuration is untouched.
 
 ## Install / Update
 
@@ -39,13 +56,13 @@ sudo install -d -m 0755 /etc/apt/keyrings
 curl -fsSL https://deb.griffo.io/EA0F721D231FDD3A0A17B9AC7808B4DD62C41256.asc | sudo gpg --dearmor --yes -o /etc/apt/keyrings/deb.griffo.io.gpg
 echo "deb [signed-by=/etc/apt/keyrings/deb.griffo.io.gpg] https://deb.griffo.io/apt $(lsb_release -sc 2>/dev/null) main" | sudo tee /etc/apt/sources.list.d/deb.griffo.io.list
 sudo apt update
-sudo apt install neovim-latest
+sudo apt install neovim
 ```
 
 Optionally install the debug-symbol variant alongside and switch between them:
 
 ```sh
-sudo apt install neovim-latest-unstripped
+sudo apt install neovim-unstripped
 sudo update-alternatives --config nvim
 ```
 
@@ -53,11 +70,11 @@ sudo update-alternatives --config nvim
 
 1. Download the `.deb` files for your Debian suite from the
    [Releases](https://github.com/dariogriffo/neovim-debian/releases) page
-   (`neovim-latest-runtime` + `neovim-latest`).
+   (`neovim-runtime` + `neovim`).
 2. Install them:
 
 ```sh
-sudo dpkg -i neovim-latest-runtime_*.deb neovim-latest_*.deb
+sudo dpkg -i neovim-runtime_*.deb neovim_*.deb
 ```
 
 ## Updating

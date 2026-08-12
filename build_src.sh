@@ -15,22 +15,19 @@ if [ -z "$VERSION" ] || [ -z "$BUILD" ]; then
     exit 1
 fi
 
-PACKAGE_NAME="neovim-latest"
+PACKAGE_NAME="neovim"
 ORIG_TARBALL="${PACKAGE_NAME}_${VERSION}.orig.tar.gz"
 BUILD_DIR="${PACKAGE_NAME}-${VERSION}"
 
 # --- Shared .orig.tar.gz: the upstream source archive for tag v<VERSION> -----
-# GitHub archive of tag "v<VERSION>" extracts to "neovim-<VERSION>/"; rename it
-# to "neovim-latest-<VERSION>/" as dpkg-source expects <source>-<version>/.
+# GitHub's archive of tag "v<VERSION>" extracts to "neovim-<VERSION>/", which is
+# exactly the "<source>-<version>/" layout dpkg-source expects, so it can be
+# used as the .orig tarball as-is.
 if [ ! -f "$ORIG_TARBALL" ]; then
     echo "Downloading upstream source for v${VERSION}..."
     wget -q "https://github.com/neovim/neovim/archive/refs/tags/v${VERSION}.tar.gz" \
-        -O "neovim-${VERSION}.tar.gz"
-    tar -xf "neovim-${VERSION}.tar.gz"
-    mv "neovim-${VERSION}" "${BUILD_DIR}"
-    tar -czf "$ORIG_TARBALL" "${BUILD_DIR}"
-    rm -rf "${BUILD_DIR}" "neovim-${VERSION}.tar.gz"
-    echo "  Repacked as $ORIG_TARBALL"
+        -O "$ORIG_TARBALL"
+    echo "  Saved as $ORIG_TARBALL"
 else
     echo "  Using existing $ORIG_TARBALL"
 fi
@@ -45,7 +42,7 @@ build_source_package() {
     cp -r debian "$BUILD_DIR/"
 
     cat > "$BUILD_DIR/debian/changelog" << EOF
-neovim-latest (${FULL_VERSION}) ${dist}; urgency=medium
+neovim (${FULL_VERSION}) ${dist}; urgency=medium
 
   * New upstream release ${VERSION}.
 
